@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Kanji Table</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <!-- side bar -->
+        <nav class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0">
+            <div class="container-fluid d-flex flex-column p-0">
+                <a class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0" href="#">
+                    <div class="sidebar-brand-icon rotate-n-15">
+                        <i class="fas fa-laugh-wink"></i>
+                    </div>
+                    <div class="sidebar-brand-text mx-3">
+                        <span>JPPJ</span>
+                    </div>
+                </a>
+                <hr class="sidebar-divider my-0">
+                <ul class="navbar-nav text-light" id="accordionSidebar">
+                    <li class="nav-item">
+                        <a class="nav-link " href="index.html">
+                            <i class="fas fa-table"></i>
+                           <span>Translate</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="table.html">
+                            <i class="fas fa-book-open"></i>
+                           <span>Kanji Table</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="text-center d-none d-md-inline">
+                    <button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button>
+                </div>
+            </div>
+        </nav>
+        <!-- side bar -->
+
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container-fluid my-3">
+                    <div class="row">
+                        <div class="col-lg-7 col-xl-8">
+                            <!-- Kanji Overview -->
+                            <div class="card shadow mb-4">
+                                <!-- header -->
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0 py-2">Kanji Table</h6>
+                                    <select class="my-1 select px-2 py-1 border border-2 rounded" id="select-jlpt">
+                                        <option selected value="0">Choose your kanji level</option>
+                                        <option value="1">N1</option>
+                                        <option value="2">N2</option>
+                                        <option value="3">N3</option>
+                                        <option value="4">N4</option>
+                                        <option value="5">N5</option>
+                                    </select>
+                                    <form class="d-none" id="form-submit">
+                                    </form>
+                                </div>
+                                <!-- header -->
+
+                                <!-- draw -->
+                                <div class=" border d-flex justify-content-center" id="japanese-search">
+                                    <div id="japanese-wrapper"></div>
+                                </div>
+                                <!--kanji table -->
+                                    <div class="m-3 jwrapper " id="japanese-jlpt"
+                                        style="display: none; max-height: 590px; overflow-y: auto;">
+                                    </div>
+                                <!--kanji table -->
+
+                            </div>
+                            <!-- Kanji Overview -->
+
+
+                        </div>
+
+                        <!-- Kanji detail -->
+                        <div class="col-lg-5 col-xl-4"
+                            style=" transform: scale(.95);  transform-origin: top left; max-height: 500px;">
+                            <div class="card shadow mb-4">
+                                <!-- header -->
+                                <div class="card-header py-2 border d-flex justify-content-between align-items-center">
+                                    <h6 class="text-primary fw-bold m-0 py-2">Kanji Detail</h6>
+                                    <div class="dropdown no-arrow mt-2 mb-1">
+                                        <button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false"
+                                            data-bs-toggle="dropdown" type="button">
+                                            <i class="fas fa-ellipsis-v text-gray-400"></i>
+                                        </button>
+                                        <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
+                                            <p class="text-center dropdown-header">dropdown header:</p>
+                                            <a class="dropdown-item" href="#">&nbsp;Action</a>
+                                            <a class="dropdown-item" href="#">&nbsp;Another action</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">&nbsp;Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- header -->
+
+                                <div class="kanji-wrapper card-body" id="kanji-wrapper" style="display: none;">
+                                    <div class="p-0 border w-100 h-100">
+                                        <div id="sekai-card " class="text-center  justify-content-between px-3">
+                                            <!-- draw part -->
+                                            <div class="draw-kanji  ">
+                                                <div id="draw-kanji" class="h-70 "></div>
+                                            </div>
+                                            <!-- draw part -->
+
+                                            <!-- button -->
+                                            <div
+                                                class="py-1 btn-list text-center d-flex justify-content-center align-items-center mb-">
+                                                <button id="draw-kanji-b"
+                                                    class="rounded-circle m-1 p-3 border-3 btn btn-outline-secondary">
+                                                    <i class="fas fa-backward m-1 text-secondary"></i> <!-- BACK -->
+                                                </button>
+                                                <button id="draw-kanji-s"
+                                                    class="rounded-circle m-1 p-3 border-3 btn btn-outline-danger">
+                                                    <i class="fas fa-pause m-1 text-danger"></i><!-- STOP  -->
+                                                </button>
+                                                <button id="draw-kanji-p"
+                                                    class="rounded-circle m-1 p-3  border-3 btn btn-outline-info">
+                                                    <i class="fas fa-play m-1 text-info"></i> <!-- PLAY -->
+                                                </button>
+                                                <button id="draw-kanji-r"
+                                                    class="rounded-circle m-1 p-3 border-3 btn btn-outline-primary">
+                                                    <i class="fas fa-sync-alt m-1 text-primary"></i> <!-- RESET  -->
+                                                </button>
+                                                <button id="draw-kanji-n"
+                                                    class="rounded-circle m-1 p-3 border-3 btn btn-outline-success">
+                                                    <i class="fas fa-forward m-1 text-success"></i> <!-- NEXT -->
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- button -->
+
+                                        <!-- detail part -->
+                                        <div class="card-body detail-part text-center container border "
+                                            style="max-height: 300px; overflow-y: auto;">
+                                            <div
+                                                class="d-flex d-detail  align-items-start align-items-center justify-content-between my-2">
+                                                <h5 class="text-nowrap p-2 me-4 ">Hán Việt :</h5>
+                                                <div class="mx-3 d-flex flex-wrap flex-grow-1  align-items-center justify-content-around"
+                                                    id="kanji-mean">
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="d-flex d-detail  align-items-start align-items-center justify-content-between my-2">
+                                                <h5 class="text-nowrap p-2 me-4 ">Onyomi :</h5>
+                                                <div class="mx-3 d-flex flex-wrap flex-grow-1  align-items-center justify-content-around"
+                                                    id="kanji-onyomi">
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="d-flex d-detail  align-items-start align-items-center justify-content-between my-2">
+                                                <h5 class="text-nowrap p-2 ">Kunyomi :</h5>
+                                                <div class="mx-3 d-flex flex-wrap flex-grow-1  align-items-center justify-content-around"
+                                                    id="kanji-kunyomi">
+                                                </div>
+                                            </div>
+                                            <div class="">
+                                                <h5 class="text-start text-nowrap p-2" style="width: 110px;">Giải nghĩa
+                                                    :</h5>
+                                                <div class="h-60 overflow-y-scroll mx-2" id="kanji-detail">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- detail part -->
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Kanji detail -->
+
+                    </div>
+                </div>
+            </div>
+            <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+            <script src="assets/js/chart.min.js"></script>
+            <script src="assets/js/bs-init.js"></script>
+            <script src="assets/js/theme.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+                integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+                integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+                crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+                integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+                crossorigin="anonymous"></script>
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+            <script src="http://unpkg.com/kanji.js/dist/kanji.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.2/raphael-min.js"></script>
+            <script src="./js/const.js"></script>
+            <script src="./js/data/kanjiDataJSON.js"></script>
+            <script src="./js/data/wordDataJSON.js"></script>
+            <script src="./js/dmak.js"></script>
+            <script src="./js/dmakLoader.js"></script>
+            <script src="./js/drawKanji.js"></script>
+            <script src="./js/app.js"></script>
+</body>
+
+</html>

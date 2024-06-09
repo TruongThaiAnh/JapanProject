@@ -1,0 +1,127 @@
+
+.long {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+  }
+
+  .kanji {
+    height: 109px;
+    width: 109px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn:hover>i{
+    color: white !important;
+    transition:.5s;
+}
+
+#japanese-wrapper{
+    width: 100% !important;
+}
+
+/* Thay đổi độ rộng của thanh cuộn */
+.card-body::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Tùy chỉnh thanh cuộn */
+.card-body::-webkit-scrollbar-thumb {
+    background-color: #cfe2ff; /* Màu của thanh cuộn */
+    border-radius: 6px; /* Bo tròn góc */
+    border: 3px solid #f8f9fc; /* Viền xung quanh thanh cuộn */
+}
+
+/* Tùy chỉnh vùng chứa thanh cuộn */
+.card-body::-webkit-scrollbar-track {
+    background: #f8f9fc; /* Màu của vùng chứa */
+    border-radius: 6px; /* Bo tròn góc */
+}
+
+/* Hiệu ứng khi di chuột lên thanh cuộn */
+.card-body::-webkit-scrollbar-thumb:hover {
+    background: #4e73df;
+}
+/* Thay đổi độ rộng của thanh cuộn */
+.d-detail>div::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Tùy chỉnh thanh cuộn */
+.d-detail>div::-webkit-scrollbar-thumb {
+    background-color: #cfe2ff; /* Màu của thanh cuộn */
+    border-radius: 6px; /* Bo tròn góc */
+    border: 3px solid #f8f9fc; /* Viền xung quanh thanh cuộn */
+}
+
+/* Tùy chỉnh vùng chứa thanh cuộn */
+.d-detail>div::-webkit-scrollbar-track {
+    background: #f8f9fc; /* Màu của vùng chứa */
+    border-radius: 6px; /* Bo tròn góc */
+}
+
+/* Hiệu ứng khi di chuột lên thanh cuộn */
+.d-detail>div::-webkit-scrollbar-thumb:hover {
+    background: #4e73df;
+}
+
+.draw-kanji{
+    width: 100px; 
+    height: 100px; 
+    transform: scale(1.85);
+    margin: 20% 35% ; 
+} 
+
+.btn-list{
+    transform: scale(.9);
+} 
+
+.card-body h5{
+    /* background: #f8f9fc; */
+    font-weight: 700;
+    color: #4e73df;
+    font-size: 1.1rem;
+}
+.detail-part .d-flex .d-flex div{
+    margin: 0 3%; 
+}
+/* .d-flex .d-flex .flex-rowv{
+   max-width: 500px;
+} */
+
+/* Thay đổi độ rộng của thanh cuộn */
+.jwrapper::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* Tùy chỉnh thanh cuộn */
+.jwrapper::-webkit-scrollbar-thumb {
+    background-color: #cfe2ff; /* Màu của thanh cuộn */
+    border-radius: 6px; /* Bo tròn góc */
+    border: 3px solid #f8f9fc; /* Viền xung quanh thanh cuộn */
+}
+
+/* Tùy chỉnh vùng chứa thanh cuộn */
+.jwrapper::-webkit-scrollbar-track {
+    background: #f8f9fc; /* Màu của vùng chứa */
+    border-radius: 6px; /* Bo tròn góc */
+}
+
+/* Hiệu ứng khi di chuột lên thanh cuộn */
+.jwrapper::-webkit-scrollbar-thumb:hover {
+    background: #4e73df;
+}
+#japanese-jlpt>h5{
+    margin: .5%; 
+    cursor: pointer;
+}
+#japanese-jlpt>h5:hover{
+   background: #4e73df;
+   transition:.45s;
+   color: white;
+}
+
