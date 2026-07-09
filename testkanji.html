@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tool Vẽ Kanji - Animation & Số</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Khung chứa Kanji */
+        svg {
+            width: 300px;
+            height: 300px;
+            border: 2px dashed #999;
+            background-color: #fff;
+            margin-bottom: 20px;
+        }
+
+        /* Ẩn màu tô bên trong của nét vẽ KanjiVG (nếu có) */
+        svg path {
+            fill: none !important;
+            /* Đã xóa dòng stroke màu đỏ ở đây */
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Làm đẹp cho các số thứ tự có sẵn trong file */
+        svg text {
+            font-size: 6px;
+            font-weight: bold;
+            /* Đã xóa dòng fill màu xanh ở đây */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Hiệu Ứng Vẽ Kanji</h2>
+    <div id="kanji-container"></div>
+    <br>
+    <button onclick="drawKanji()">Vẽ lại từ đầu</button>
+
+    <script>
+        // Sửa đường dẫn này thành đường dẫn trỏ tới file SVG của bạn
+        // Ví dụ: 'kanji/09f61-Insatsu.svg'
+        const kanjiFile = '/09f61-Insatsu.svg';
+
+        // Tải file SVG vào web
+        fetch(kanjiFile)
+            .then(response => response.text())
+            .then(svgData => {
+                document.getElementById('kanji-container').innerHTML = svgData;
+                prepareKanji(); // Chuẩn bị nét vẽ
+                drawKanji();    // Bắt đầu vẽ
+            });
+
+        function prepareKanji() {
+            const paths = document.querySelectorAll('#kanji-container path');
+            const texts = document.querySelectorAll('#kanji-container text');
+
+            const totalStrokes = paths.length; // Đếm tổng số nét của chữ Kanji
+
+            // Lặp qua từng nét vẽ
+            paths.forEach((path, index) => {
+                // 1. Thuật toán chia đều vòng tròn màu HSL (360 độ) để tạo màu riêng biệt cho từng nét
+                const hue = Math.floor((index * (360 / totalStrokes)) % 360);
+                const uniqueColor = `hsl(${hue}, 90%, 45%)`; // Độ bão hòa 90%, độ sáng 45% cho màu đậm, nét
+
+                // 2. Gán màu vừa tạo cho nét vẽ
+                path.style.stroke = uniqueColor;
+
+                // 3. Gán chung màu đó cho con số tương ứng
+                if (texts[index]) {
+                    texts[index].style.fill = uniqueColor;
+                }
+
+                // 4. Kỹ thuật stroke-dasharray để chuẩn bị làm animation
+                const length = path.getTotalLength();
+                path.style.strokeDasharray = length;
+                path.style.strokeDashoffset = length; // Ẩn nét đi lúc ban đầu
+            });
+        }
+
+        function drawKanji() {
+            const paths = document.querySelectorAll('#kanji-container path');
+            const texts = document.querySelectorAll('#kanji-container text');
+
+            // Reset lại trạng thái ban đầu trước khi vẽ
+            paths.forEach(p => {
+                p.style.transition = 'none';
+                p.style.strokeDashoffset = p.getTotalLength();
+            });
+            texts.forEach(t => t.style.opacity = 0);
+
+            // Dùng setTimeout một chút để trình duyệt kịp reset CSS
+            setTimeout(() => {
+                let delay = 0; // Thời gian chờ trước khi vẽ nét tiếp theo
+
+                paths.forEach((path, index) => {
+                    const length = path.getTotalLength();
+                    const duration = length * 5; // Tốc độ vẽ (càng lớn càng chậm)
+
+                    setTimeout(() => {
+                        // 1. Hiện số thứ tự của nét đó lên
+                        if (texts[index]) {
+                            texts[index].style.opacity = 1;
+                        }
+
+                        // 2. Chạy animation vẽ nét
+                        path.style.transition = `stroke-dashoffset ${duration}ms linear`;
+                        path.style.strokeDashoffset = 0;
+                    }, delay);
+
+                    // Cộng dồn thời gian chờ cho nét tiếp theo (duration + thời gian nghỉ giữa 2 nét)
+                    delay += duration + 250;
+                });
+            }, 50);
+        }
+    </script>
+</body>
+
+</html>
