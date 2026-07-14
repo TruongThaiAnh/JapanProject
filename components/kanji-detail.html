@@ -1,0 +1,81 @@
+<div class="card shadow mb-4">
+    <!-- header -->
+    <div id="kanji-detail-header" class="card-header border d-flex justify-content-between align-items-center"
+        style="display: none;">
+        <div id="draw-kanji" style="height: 109px; width: 109px;"></div>
+        <div class="dropdown no-arrow">
+            <button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown"
+                type="button">
+                <i class="fas fa-ellipsis-v text-gray-400"></i>
+            </button>
+            <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
+                <p class="text-center dropdown-header">dropdown header:</p>
+                <a class="dropdown-item" href="#">&nbsp;Action</a>
+                <a class="dropdown-item" href="#">&nbsp;Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">&nbsp;Something else here</a>
+            </div>
+        </div>
+    </div>
+    <!-- header -->
+
+    <div class="kanji-wrapper card-body" id="kanji-wrapper" style="display: none;">
+        <div class="p-0 border w-100 h-100">
+            <div id="sekai-card " class="text-center  justify-content-between px-3">
+                <!-- draw part is now in the header -->
+
+                <!-- button -->
+                <div class="py-1 btn-list text-center d-flex justify-content-center align-items-center mb-">
+                    <button id="draw-kanji-b" class="rounded-circle m-1 p-3 border-3 btn btn-outline-secondary">
+                        <i class="fas fa-backward m-1 text-secondary"></i> <!-- BACK -->
+                    </button>
+                    <button id="draw-kanji-s" class="rounded-circle m-1 p-3 border-3 btn btn-outline-danger">
+                        <i class="fas fa-pause m-1 text-danger"></i><!-- STOP  -->
+                    </button>
+                    <button id="draw-kanji-p" class="rounded-circle m-1 p-3  border-3 btn btn-outline-info">
+                        <i class="fas fa-play m-1 text-info"></i> <!-- PLAY -->
+                    </button>
+                    <button id="draw-kanji-r" class="rounded-circle m-1 p-3 border-3 btn btn-outline-primary">
+                        <i class="fas fa-sync-alt m-1 text-primary"></i> <!-- RESET  -->
+                    </button>
+                    <button id="draw-kanji-n" class="rounded-circle m-1 p-3 border-3 btn btn-outline-success">
+                        <i class="fas fa-forward m-1 text-success"></i> <!-- NEXT -->
+                    </button>
+                </div>
+            </div>
+            <!-- button -->
+
+            <!-- detail part -->
+            <div class="card-body detail-part text-center container border "
+                style="max-height: 300px; overflow-y: auto;">
+                <div class="d-flex d-detail  align-items-start align-items-center justify-content-between my-2">
+                    <h5 class="text-nowrap p-2 me-4 ">Hán Việt :</h5>
+                    <div class="mx-3 d-flex flex-wrap flex-grow-1  align-items-center justify-content-around"
+                        id="kanji-mean">
+                    </div>
+                </div>
+                <div class="d-flex d-detail  align-items-start align-items-center justify-content-between my-2">
+                    <h5 class="text-nowrap p-2 me-4 ">Onyomi :</h5>
+                    <div class="mx-3 d-flex flex-wrap flex-grow-1  align-items-center justify-content-around"
+                        id="kanji-onyomi">
+                    </div>
+                </div>
+                <div class="d-flex d-detail  align-items-start align-items-center justify-content-between my-2">
+                    <h5 class="text-nowrap p-2 ">Kunyomi :</h5>
+                    <div class="mx-3 d-flex flex-wrap flex-grow-1  align-items-center justify-content-around"
+                        id="kanji-kunyomi">
+                    </div>
+                </div>
+                <div class="">
+                    <h5 class="text-start text-nowrap p-2" style="width: 110px;">Giải nghĩa
+                        :</h5>
+                    <div class="h-60 overflow-y-scroll mx-2" id="kanji-detail">
+                    </div>
+                </div>
+            </div>
+            <!-- detail part -->
+
+        </div>
+    </div>
+
+</div>

@@ -9,8 +9,6 @@
 
 	/**
 	 * Gather SVG data information for a given set of characters.
-	 * By default this action is done while instanciating the Word
-	 * object, but it can be skipped, see above
 	 */
 	DmakLoader.prototype.load = function (text, callback) {
 		var paths = [],
@@ -25,8 +23,14 @@
 						callback(paths);
 					}
 				},
-				error: function (msg) {
-					console.log("Error", msg);
+				error: function (index, msg) {
+					// On error, mark this char as empty and continue
+					console.warn("DmakLoader: could not load SVG for char index " + index + ":", msg);
+					paths[index] = [];
+					done++;
+					if (done === nbChar) {
+						callback(paths);
+					}
 				}
 			};
 
@@ -37,19 +41,14 @@
 
 	/**
 	 * Try to load a SVG file matching the given char code.
-	 * @thanks to the incredible work made by KanjiVG
-	 * @see: http://kanjivg.tagaini.net
 	 */
 	function loadSvg(uri, index, charCode, callbacks) {
 		var xhr = new XMLHttpRequest(),
 			code = ("00000" + charCode).slice(-5);
 
-		// Skip space character
-		if(code === "00020" || code === "03000") {
-			callbacks.done(index, {
-				paths: [],
-				texts: []
-			});
+		// Skip space character and ideographic space
+		if (code === "00020" || code === "03000") {
+			callbacks.done(index, []);
 			return;
 		}
 
@@ -57,9 +56,15 @@
 		xhr.onreadystatechange = function () {
 			if (xhr.readyState === 4) {
 				if (xhr.status === 200) {
-					callbacks.done(index, parseResponse(xhr.response, code));
+					try {
+						var result = parseResponse(xhr.response, code);
+						callbacks.done(index, result);
+					} catch (e) {
+						console.error("DmakLoader: parseResponse error for code " + code + ":", e);
+						callbacks.error(index, e.message);
+					}
 				} else {
-					callbacks.error(xhr.statusText);
+					callbacks.error(index, "HTTP " + xhr.status + " for " + code + ".svg");
 				}
 			}
 		};
@@ -67,49 +72,78 @@
 	}
 
 	/**
-	 * Simple parser to extract paths and texts data.
+	 * Parse SVG response and extract stroke paths and text positions.
 	 */
 	function parseResponse(response, code) {
 		var data = [],
-			dom = new DOMParser().parseFromString(response, "application/xml"),
-			texts = dom.querySelectorAll("text"),
 			groups = [],
 			i;
-		
-		// Private recursive function to parse DOM content
+
+		// Parse as HTML instead of XML to avoid namespace/getElementById issues.
+		// XML parsing in browsers doesn't process DTD ATTLIST declarations,
+		// so getElementById() fails for IDs like "kvg:065e5".
+		var tempDiv = document.createElement("div");
+		tempDiv.innerHTML = response;
+
+		// Find root stroke group by ID
+		var rootEl = null;
+		var allGs = tempDiv.querySelectorAll("g");
+		for (i = 0; i < allGs.length; i++) {
+			if (allGs[i].getAttribute("id") === "kvg:" + code) {
+				rootEl = allGs[i];
+				break;
+			}
+		}
+
+		if (!rootEl) {
+			console.warn("DmakLoader: no element found for id 'kvg:" + code + "'");
+			return data;
+		}
+
+		// Get all text elements for stroke order numbers
+		var texts = tempDiv.querySelectorAll("text");
+
+		// Recursive function to extract path data
 		function __parse(element) {
-            var children = element.childNodes,
-                i;
+			if (!element) return;
+			var children = element.childNodes, j;
 
-            for(i = 0; i < children.length; i++) {
-                if(children[i].tagName === "g") {
-                    groups.push(children[i].getAttribute("id"));
-                    __parse(children[i]);
-                    groups.splice(groups.indexOf(children[i].getAttribute("id")), 1);
-                }
-                else if(children[i].tagName === "path") {
-                    data.push({
-                        "path" : children[i].getAttribute("d"),
-                        "groups" : groups.slice(0)
-                    });
-                }
-            }
+			for (j = 0; j < children.length; j++) {
+				var child = children[j];
+				if (child.nodeType !== 1) continue; // Skip text nodes
+				var tag = child.tagName.toLowerCase();
+				if (tag === "g") {
+					groups.push(child.getAttribute("id"));
+					__parse(child);
+					groups.splice(groups.indexOf(child.getAttribute("id")), 1);
+				} else if (tag === "path") {
+					data.push({
+						"path": child.getAttribute("d"),
+						"groups": groups.slice(0)
+					});
+				}
+			}
 		}
 
-        // Start parsing
-		__parse(dom.getElementById("kvg:" + code));
+		__parse(rootEl);
 
-        // And finally add order mark information
+		// Add stroke order text positions
 		for (i = 0; i < texts.length; i++) {
-			data[i].text = {
-				"value" : texts[i].textContent,
-				"x" : texts[i].getAttribute("transform").split(" ")[4],
-				"y" : texts[i].getAttribute("transform").split(" ")[5].replace(")", "")
-			};
+			if (data[i]) {
+				var transform = texts[i].getAttribute("transform");
+				if (transform) {
+					var parts = transform.split(" ");
+					data[i].text = {
+						"value": texts[i].textContent,
+						"x": parts[4] || "0",
+						"y": (parts[5] || "0)").replace(")", "")
+					};
+				}
+			}
 		}
-		
+
 		return data;
 	}
 
 	window.DmakLoader = DmakLoader;
-}());
+}());

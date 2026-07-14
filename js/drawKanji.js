@@ -1,26 +1,27 @@
-function drawKanji(kanji, element, btnList) {
-    var dmak = new Dmak(kanji, { 'element': element, "stroke": { "attr": { "stroke": "#FF0000" } }, "uri": "https://kanjivg.tagaini.net/kanjivg/kanji/" });
-
+function setupDmakControls(dmak, btnList) {
     var p = document.getElementById(btnList.back);
-    p.onclick = function () {
-        dmak.eraseLastStrokes(1);
-    };
+    if (p) p.onclick = function () { dmak.eraseLastStrokes(1); };
     var s = document.getElementById(btnList.stop);
-    s.onclick = function () {
-        dmak.pause();
-    };
+    if (s) s.onclick = function () { dmak.pause(); };
     var g = document.getElementById(btnList.play);
-    g.onclick = function () {
-        dmak.render();
-    };
+    if (g) g.onclick = function () { dmak.render(); };
     var n = document.getElementById(btnList.next);
-    n.onclick = function () {
-        dmak.renderNextStrokes(1);
-    };
+    if (n) n.onclick = function () { dmak.renderNextStrokes(1); };
     var r = document.getElementById(btnList.reset);
-    r.onclick = function () {
-        dmak.erase();
+    if (r) r.onclick = function () { dmak.erase(); };
+}
+
+function drawKanji(kanji, element, btnList, options = {}) {
+    const defaultOptions = {
+        'element': element,
+        "stroke": { "attr": { "stroke": "#FF0000" } },
+        "uri": "kanji/"
     };
+
+    // dmak's internal `assign` will handle merging the options object.
+    var dmak = new Dmak(kanji, { ...defaultOptions, ...options });
+
+    setupDmakControls(dmak, btnList);
 
     return dmak;
 }
@@ -69,14 +70,33 @@ function getTalkingWord(input) {
 }
 
 function meanKanji(kanji) {
-    kanjiWrapper.style.display = "block";
-    drawKanjiWord.innerHTML = '';
-    drawKanji(kanji, "draw-kanji", btnListKanji);
+    const kanjiDetailHeader = document.getElementById("kanji-detail-header");
+    const kanjiWrapper = document.getElementById("kanji-wrapper");
+    const drawKanjiWord = document.getElementById("draw-kanji");
+    const kanjiMean = document.getElementById("kanji-mean");
+    const kanjiOnyomi = document.getElementById("kanji-onyomi");
+    const kanjiKunyomi = document.getElementById("kanji-kunyomi");
+    const kanjiDetail = document.getElementById("kanji-detail");
+    const btnListKanji = {
+        back: "draw-kanji-b", stop: "draw-kanji-s",
+        play: "draw-kanji-p", reset: "draw-kanji-r", next: "draw-kanji-n",
+    };
+
+    if (kanjiDetailHeader) kanjiDetailHeader.style.display = "flex";
+    if (kanjiWrapper) kanjiWrapper.style.display = "block";
+    if (drawKanjiWord) drawKanjiWord.innerHTML = '';
+
+    var dmak = new Dmak(kanji, {
+        'element': "draw-kanji", "stroke": { "attr": { "stroke": "hsl" } }, "uri": "kanji/"
+    });
+    setupDmakControls(dmak, btnListKanji);
+
     let _kanjiDetail = findDetailKanji(kanji);
-    kanjiMean.innerHTML = _kanjiDetail.mean.map(item => `<div>${item}</div>`).join(' ');
-    kanjiOnyomi.innerHTML = _kanjiDetail.on.map(item => `<div>${item}</div>`).join(' ');
-    kanjiKunyomi.innerHTML = _kanjiDetail.kun.map(item => `<div>${item}</div>`).join(' ');
-    kanjiDetail.innerHTML = _kanjiDetail.detail.split('##').map(item => `<div class="ps-2 text-start"> - ${item}</div>`).join(' ');
+    if (!_kanjiDetail) return;
+    if (kanjiMean) kanjiMean.innerHTML = _kanjiDetail.mean.map(item => `<div>${item}</div>`).join(' ');
+    if (kanjiOnyomi) kanjiOnyomi.innerHTML = _kanjiDetail.on.map(item => `<div>${item}</div>`).join(' ');
+    if (kanjiKunyomi) kanjiKunyomi.innerHTML = _kanjiDetail.kun.map(item => `<div>${item}</div>`).join(' ');
+    if (kanjiDetail) kanjiDetail.innerHTML = _kanjiDetail.detail.split('##').map(item => `<div class="ps-2 text-start"> - ${item}</div>`).join(' ');
 }
 
 function findDetailKanji(kanji) {
@@ -84,7 +104,8 @@ function findDetailKanji(kanji) {
 }
 
 function textToSpeech() {
-    const text = inputJp.value;
+    const inputJp = document.getElementById("input-Jp");
+    const text = inputJp ? inputJp.value : "";
     const msg = new SpeechSynthesisUtterance();
     msg.text = getTalkingWord(text);
 
@@ -103,15 +124,15 @@ function textToSpeech() {
 function removeDuplicatesByItem1(array) {
     const uniqueItems = [];
     const checker = new Set();
-  
+
     array.forEach(item => {
-      const item1 = item[1];
-      const key = JSON.stringify(item1);
-      if (!checker.has(key)) {
-        checker.add(key);
-        uniqueItems.push(item);
-      }
+        const item1 = item[1];
+        const key = JSON.stringify(item1);
+        if (!checker.has(key)) {
+            checker.add(key);
+            uniqueItems.push(item);
+        }
     });
-  
+
     return uniqueItems;
-  }
+}

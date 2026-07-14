@@ -1,0 +1,42 @@
+<div class="card shadow mb-4">
+    <!-- header -->
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="text-primary fw-bold m-0">Kanji Overview</h6>
+        <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false"
+                data-bs-toggle="dropdown" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
+            <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in">
+                <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item"
+                    href="#">&nbsp;Action</a><a class="dropdown-item" href="#">&nbsp;Another action</a>
+                <div class="dropdown-divider"></div><a class="dropdown-item" href="#">&nbsp;Something else here</a>
+
+            </div>
+        </div>
+    </div>
+    <!-- header -->
+
+    <!-- button -->
+    <div class="py-2 text-center">
+        <button id="japanese-wrapper-b" class="rounded-circle p-3 border-3 btn btn-outline-secondary">
+            <i class="fas fa-backward m-1 text-secondary"></i><!-- BACK -->
+        </button>
+        <button id="japanese-wrapper-s" class="my-1 rounded-circle p-3 border-3 btn btn-outline-danger">
+            <i class="fas fa-pause m-1 text-danger"></i><!-- STOP  -->
+        </button>
+        <button id="japanese-wrapper-p" class="rounded-circle p-3  border-3 btn btn-outline-info">
+            <i class="fas fa-play m-1 text-info"></i><!-- PLAY -->
+        </button>
+        <button id="japanese-wrapper-r" class="rounded-circle p-3 border-3 btn btn-outline-primary">
+            <i class="fas fa-sync-alt m-1 text-primary"></i><!-- RESET  -->
+        </button>
+        <button id="japanese-wrapper-n" class="rounded-circle p-3 border-3 btn btn-outline-success">
+            <i class="fas fa-forward m-1 text-success"></i><!-- NEXT -->
+        </button>
+    </div>
+    <!-- button -->
+
+    <!-- draw -->
+    <div class="card-body drawkanji" style="max-height: 350px; overflow-y: auto;">
+        <div id="japanese-wrapper"></div>
+    </div>
+    <!-- draw -->
+</div>

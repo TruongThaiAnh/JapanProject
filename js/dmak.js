@@ -220,15 +220,16 @@
 	function preprocessStrokes(data, options) {
 		var strokes = [],
 			stroke,
-			length,
-			i,
-			j;
+			length, i, j;
 
 		for (i = 0; i < data.length; i++) {
+			if (!data[i] || !data[i].length) continue;
 			for (j = 0; j < data[i].length; j++) {
 				length = Raphael.getTotalLength(data[i][j].path);
 				stroke = {
 					"char": i,
+					"strokeNum": j,
+					"totalStrokes": data[i].length,
 					"length": length,
 					"duration": length * options.step * 500,
 					"path": data[i][j].path,
@@ -257,13 +258,15 @@
 			paper = new Raphael(options.element, options.width + "px", options.height + "px");
 			paper.setViewBox(options.viewBox.x, options.viewBox.y, options.viewBox.w, options.viewBox.h);
 			paper.canvas.setAttribute("class", "dmak-svg");
-			let char = findInput[nbChar - i - 1];
-			if (nbChar > 1) {
+			let currentInput = window.findInput || "";
+			let char = currentInput[nbChar - i - 1];
+			if (nbChar > 1 && char) {
 				paper.canvas.addEventListener("click", () => {
 					if (findKanji(char).length != 0) {
-						meanKanji(char[0]);			
+						meanKanji(char[0]);
 					} else {
-						kanjiWrapper.style.display = "none";
+						var kw = document.getElementById("kanji-wrapper");
+						if (kw) kw.style.display = "none";
 					}
 				});
 			}
@@ -317,9 +320,12 @@
 	}
 
 	/**
-	 * Draw a single stroke ; drawing can be animated if set as so.
+	 * Draw a single stroke
 	 */
 	function drawStroke(paper, stroke, timeouts, options) {
+		const hue = Math.floor((stroke.strokeNum * (360 / stroke.totalStrokes)) % 360);
+		const hslColor = `hsl(${hue}, 90%, 45%)`;
+
 		var cb = function () {
 
 			// The stroke object may have been already erased when we reach this timeout
@@ -330,6 +336,8 @@
 			var color = options.stroke.attr.stroke;
 			if (options.stroke.attr.stroke === "random") {
 				color = Raphael.getColor();
+			} else if (options.stroke.attr.stroke === "hsl") {
+				color = hslColor;
 			}
 
 			// Revert back to the default color.
@@ -340,7 +348,12 @@
 		};
 
 		stroke.object.path = paper.path(stroke.path);
-		stroke.object.path.attr(options.stroke.attr);
+		
+		var drawAttr = { ...options.stroke.attr };
+		if (options.stroke.attr.stroke === "hsl") {
+			drawAttr.stroke = hslColor;
+		}
+		stroke.object.path.attr(drawAttr);
 
 		if (options.stroke.order.visible) {
 			showStrokeOrder(paper, stroke, options);
@@ -359,7 +372,12 @@
 	 */
 	function showStrokeOrder(paper, stroke, options) {
 		stroke.object.text = paper.text(stroke.text.x, stroke.text.y, stroke.text.value);
-		stroke.object.text.attr(options.stroke.order.attr);
+		var textAttr = { ...options.stroke.order.attr };
+		if (options.stroke.attr.stroke === "hsl") {
+			const hue = Math.floor((stroke.strokeNum * (360 / stroke.totalStrokes)) % 360);
+			textAttr.fill = `hsl(${hue}, 90%, 45%)`;
+		}
+		stroke.object.text.attr(textAttr);
 	}
 
 	/**
@@ -368,7 +386,11 @@
 	 * http://jakearchibald.com/2013/animated-line-drawing-svg/
 	 */
 	function animateStroke(stroke, direction, options, callback) {
-		stroke.object.path.attr({ "stroke": options.stroke.attr.active });
+		const hue = Math.floor((stroke.strokeNum * (360 / stroke.totalStrokes)) % 360);
+		const hslColor = `hsl(${hue}, 90%, 45%)`;
+		const activeColor = (options.stroke.attr.stroke === "hsl") ? hslColor : options.stroke.attr.active;
+
+		stroke.object.path.attr({ "stroke": activeColor });
 		stroke.object.path.node.style.transition = stroke.object.path.node.style.WebkitTransition = "none";
 
 		// Set up the starting positions
